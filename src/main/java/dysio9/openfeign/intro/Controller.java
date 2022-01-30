@@ -1,5 +1,6 @@
 package dysio9.openfeign.intro;
 
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +34,13 @@ public class Controller {
     }
 
     @GetMapping({"/getChuckJoke/failureProbability/{percent}", "/getChuckJoke/failureProbability"})
-    public ResponseEntity<String> getRandomWithFailure(@PathVariable Optional<Integer> percent) {
-        log.info("Request was received with failures probability: " + percent.orElse(50) + "%");
+    public String getRandomWithFailure(@PathVariable Optional<Integer> percent) {
+        log.info("Request was received with failure probability: " + percent.orElse(50) + "%");
 
         boolean isFailure = random.nextInt(1, 101) <= percent.orElse(50);
         if (isFailure) {
-            log.debug("Request was not sent");
-            return new ResponseEntity<>("Error on Chuck Norris jokes endpoint", I_AM_A_TEAPOT);
+            throw new NoSuchElementException("Chuck Norris joke service is unavailable");
         }
-        return new ResponseEntity<>(client.getRandomJoke().getValue(), OK);
+        return client.getRandomJoke().getValue();
     }
 }
