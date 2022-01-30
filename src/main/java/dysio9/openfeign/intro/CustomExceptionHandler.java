@@ -13,9 +13,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(NoSuchElementException.class)
-  protected ResponseEntity<String> handlePatientAlreadyExistsException(
+  protected ResponseEntity<String> handleNoSuchElementException(
       NoSuchElementException ex) {
-    log.debug("External request was not sent");
+    log.error("External request was not sent");
     return new ResponseEntity<>("Error: " + ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
   }
 }
